@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Cyber Threat Map 3D</title>
+    <script src="//unpkg.com/globe.gl"></script>
+    <style>
+        body { margin: 0; background-color: #000; overflow: hidden; font-family: sans-serif; }
+        #title {
+            position: absolute; top: 20px; left: 20px; color: #ff0000;
+            z-index: 10; text-transform: uppercase; letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="title">LIVE DDOS ATTACKS MAP</h1>
+    <div id="globeViz"></div>
+
+    <script>
+        const globe = Globe()
+            (document.getElementById('globeViz'))
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+            .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+            
+            .arcColor(() => '#ff3333')
+            .arcDashLength(0.5)
+            .arcDashGap(2)
+            .arcDashAnimateTime(2000) // Prędkość "pocisku"
+            .arcStroke(0.5)
+            
+            .arcLabel(d => `Atak z IP: ${d.ip}`)
+            
+            .pointColor(() => '#ffff00')
+            .pointRadius(0.5);
+
+        function updateData() {
+            fetch('attacks.json')
+                .then(res => res.json())
+                .then(attacks => {
+                    globe.arcsData(attacks);
+                    globe.pointsData(attacks.map(d => ({ lat: d.startLat, lng: d.startLng })));
+                })
+                .catch(err => console.log("Czekam na dane z Pythona..."));
+        }
+
+        updateData();
+
+        setInterval(updateData, 30000);
+
+        globe.controls().autoRotate = true;
+        globe.controls().autoRotateSpeed = 0.5;
+    </script>
+</body>
+</html>
