@@ -2,59 +2,106 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Cyber Threat Map 3D</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Cyber Threat Map</title>
     <script src="//unpkg.com/globe.gl"></script>
     <style>
-        body { margin: 0; background-color: #000; overflow: hidden; font-family: sans-serif; }
-        #title {
-            position: absolute; top: 20px; left: 20px; color: #ff0000;
-            z-index: 10; text-transform: uppercase; letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255,0,0,0.5);
+        body { 
+            margin: 0; 
+            background-color: #000; 
+            overflow: hidden; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        #ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #ff0000;
+            z-index: 10;
+            pointer-events: none;
+        }
+        h1 { 
+            margin: 0; 
+            font-size: 24px; 
+            text-transform: uppercase; 
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(255,0,0,0.7);
+        }
+        .status { color: #00ff00; font-size: 12px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <h1 id="title">LIVE DDOS ATTACKS MAP</h1>
+    <div id="ui-overlay">
+        <h1>Live Cyber Attack Tracker</h1>
+        <div class="status" id="status-text">System Ready... Waiting for data</div>
+    </div>
+
     <div id="globeViz"></div>
 
     <script>
-        const globe = Globe()
+        // Inicjalizacja globusa
+        const world = Globe()
             (document.getElementById('globeViz'))
             .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
             
+            // Konfiguracja Łuków (Ataki)
             .arcColor(() => '#ff3333')
-            .arcDashLength(0.5)
-            .arcDashGap(2)
-            .arcDashAnimateTime(2000) // Prędkość "pocisku"
+            .arcDashLength(0.4)
+            .arcDashGap(1)
+            .arcDashAnimateTime(1500)
             .arcStroke(0.5)
+            .arcLabel(d => `Target: ${d.cityName || 'Unknown'} | IP: ${d.ip}`)
             
-            .arcLabel(d => `Atak z IP: ${d.ip}`)
+            // Konfiguracja Punktów (Źródła) - PŁASKIE KROPKI
+            .pointColor(() => '#ffff00')
+            .pointRadius(0.25)
+            .pointAltitude(0) // To usuwa kolumny (słupki)
+            .pointsMerge(true);
+
+        // Funkcja aktualizująca dane
+        function refreshData() {
+            const statusLabel = document.getElementById('status-text');
             
-            .pointsData(attacks.map(d => ({ lat: d.startLat, lng: d.startLng })))
-            .pointColor(() => '#ffff00') // Kolor żółty
-            .pointRadius(0.5)            // To kontroluje wielkość kropki (zmniejsz do 0.2 dla mniejszych)
-            .pointsMerge(true);          // Sprawia, że punkty są płaskie na powierzchni, a nie słupkami
-    
-        function updateData() {
             fetch('attacks.json')
-                .then(res => res.json())
-                .then(attacks => {
-                    globe.arcsData(attacks);
-                    globe.pointsData(attacks.map(d => ({ lat: d.startLat, lng: d.startLng })));
+                .then(res => {
+                    if (!res.ok) throw new Error('Nie można załadować pliku JSON');
+                    return res.json();
                 })
-                .catch(err => console.log("Czekam na dane z Pythona..."));
+                .then(data => {
+                    console.log("Załadowano dane:", data);
+                    
+                    // Rysowanie łuków
+                    world.arcsData(data)
+                        .arcStartLat(d => +d.startLat)
+                        .arcStartLng(d => +d.startLng)
+                        .arcEndLat(d => +d.endLat)
+                        .arcEndLng(d => +d.endLng);
+
+                    // Rysowanie punktów startowych (płaskich)
+                    world.pointsData(data)
+                        .pointLat(d => +d.startLat)
+                        .pointLng(d => +d.startLng);
+
+                    statusLabel.innerText = `Active Sessions: ${data.length} | Last Update: ${new Date().toLocaleTimeString()}`;
+                })
+                .catch(err => {
+                    console.error(err);
+                    statusLabel.innerText = "Error: Waiting for attacks.json update...";
+                    statusLabel.style.color = "orange";
+                });
         }
 
-        updateData();
+        // Pierwsze uruchomienie
+        refreshData();
 
-        setInterval(updateData, 30000);
+        // Automatyczne odświeżanie co 60 sekund
+        setInterval(refreshData, 60000);
 
-        globe.controls().autoRotate = true;
-        globe.controls().autoRotateSpeed = 0.5;
+        // Ustawienia kamery
+        world.controls().autoRotate = true;
+        world.controls().autoRotateSpeed = 0.5;
     </script>
 </body>
-
 </html>
-
