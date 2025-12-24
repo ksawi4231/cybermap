@@ -32,9 +32,11 @@
             
             .arcLabel(d => `Atak z IP: ${d.ip}`)
             
-            .pointColor(() => '#ffff00')
-            .pointRadius(0.5);
-
+            .pointsData(attacks.map(d => ({ lat: d.startLat, lng: d.startLng })))
+            .pointColor(() => '#ffff00') // Kolor żółty
+            .pointRadius(0.5)            // To kontroluje wielkość kropki (zmniejsz do 0.2 dla mniejszych)
+            .pointsMerge(true);          // Sprawia, że punkty są płaskie na powierzchni, a nie słupkami
+    
         function updateData() {
             fetch('attacks.json')
                 .then(res => res.json())
@@ -55,3 +57,4 @@
 </body>
 
 </html>
+
