@@ -1,0 +1,29 @@
+{
+  "cities": [
+    {"name": "Warszawa", "lat": 52.2297, "lng": 21.0122},
+    {"name": "Londyn", "lat": 51.5074, "lng": -0.1278},
+    {"name": "Nowy Jork", "lat": 40.7128, "lng": -74.0060},
+    {"name": "Tokio", "lat": 35.6895, "lng": 139.6917},
+    {"name": "Berlin", "lat": 52.5200, "lng": 13.4050},
+    {"name": "Paryż", "lat": 48.8566, "lng": 2.3522},
+    {"name": "Pekin", "lat": 39.9042, "lng": 116.4074},
+    {"name": "Sydney", "lat": -33.8688, "lng": 151.2093},
+    {"name": "Sao Paulo", "lat": -23.5505, "lng": -46.6333},
+    {"name": "Moskwa", "lat": 55.7558, "lng": 37.6173},
+    {"name": "Dubaj", "lat": 25.2048, "lng": 55.2708},
+    {"name": "Singapur", "lat": 1.3521, "lng": 103.8198},
+    {"name": "Los Angeles", "lat": 34.0522, "lng": -118.2437},
+    {"name": "Madryt", "lat": 40.4168, "lng": -3.7038},
+    {"name": "Seul", "lat": 37.5665, "lng": 126.9780},
+    {"name": "Bombaj", "lat": 19.0760, "lng": 72.8777},
+    {"name": "Kair", "lat": 30.0444, "lng": 31.2357},
+    {"name": "Toronto", "lat": 43.6532, "lng": -79.3832},
+    {"name": "Rzym", "lat": 41.9028, "lng": 12.4964},
+    {"name": "Szanghaj", "lat": 31.2304, "lng": 121.4737},
+    {"name": "Meksyk", "lat": 19.4326, "lng": -99.1332},
+    {"name": "Kijów", "lat": 50.4501, "lng": 30.5234},
+    {"name": "Sztokholm", "lat": 59.3293, "lng": 18.0686},
+    {"name": "Helsinki", "lat": 60.1695, "lng": 24.9354},
+    {"name": "Amsterdam", "lat": 52.3676, "lng": 4.9041}
+  ]
+}
