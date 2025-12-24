@@ -2,22 +2,22 @@
     {
         "startLat": 59.8761,
         "startLng": 30.4339,
-        "endLat": 34.0522,
-        "endLng": -118.2437,
+        "endLat": 43.6532,
+        "endLng": -79.3832,
         "ip": "5.188.10.179"
     },
     {
         "startLat": 46.948,
         "startLng": 7.44745,
-        "endLat": 41.9028,
-        "endLng": 12.4964,
+        "endLat": 60.1695,
+        "endLng": 24.9354,
         "ip": "185.222.209.14"
     },
     {
         "startLat": 19.0748,
         "startLng": 72.8856,
-        "endLat": 41.9028,
-        "endLng": 12.4964,
+        "endLat": 37.5665,
+        "endLng": 126.978,
         "ip": "191.96.249.183"
     }
 ]
