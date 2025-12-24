@@ -1,1 +1,42 @@
+name: Aktualizacja Mapy Atakow
 
+on:
+  schedule:
+    - cron: '0 * * * *'  # Uruchamiaj automatycznie co każdą godzinę
+  workflow_dispatch:      # Pozwala Ci uruchomić robota ręcznie przyciskiem na GitHubie
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Kopiowanie plików z Twojego repozytorium na komputer GitHub
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # 2. Instalacja Pythona
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # 3. Instalacja bibliotek (np. requests)
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      # 4. Uruchomienie Twojego skryptu
+      - name: Run Python script
+        run: python fetch_data.py
+        env:
+          # Jeśli używasz klucza API, tutaj go podepniemy
+          ABUSEIPDB_KEY: ${{ secrets.ABUSEIPDB_KEY }}
+
+      # 5. Zapisanie wygenerowanego pliku attacks.json z powrotem do repozytorium
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name 'Mapa-Bot'
+          git config --global user.email 'bot@github.com'
+          git add attacks.json
+          git commit -m "Automatyczna aktualizacja ataków: $(date)" || exit 0
+          git push
