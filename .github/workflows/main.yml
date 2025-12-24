@@ -2,8 +2,11 @@ name: Aktualizacja Mapy Atakow
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Uruchamiaj automatycznie co każdą godzinę
-  workflow_dispatch:      # Pozwala Ci uruchomić robota ręcznie przyciskiem na GitHubie
+    - cron: '0 * * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
